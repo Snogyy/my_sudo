@@ -6,8 +6,24 @@
 */
 
 #include "include/my.h"
-#include <crypt.h>
-#include <string.h>
+
+void disable_echo(void)
+{
+    struct termios tty;
+
+    tcgetattr(STDIN_FILENO, &tty);
+    tty.c_lflag &= ~ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &tty);
+}
+
+void enable_echo(void)
+{
+    struct termios tty;
+
+    tcgetattr(STDIN_FILENO, &tty);
+    tty.c_lflag |= ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &tty);
+}
 
 int check_password(char *password_hash)
 {
@@ -16,7 +32,10 @@ int check_password(char *password_hash)
     char *encrypted;
 
     printf("Enter the secret password : ");
+    disable_echo();
     scanf("%s", paswd);
+    enable_echo();
+    printf("\n");
     encrypted = strdup(crypt(paswd, salt));
     if (strcmp(encrypted, password_hash) == 0) {
         free(salt);

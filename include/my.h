@@ -21,6 +21,8 @@
 #include <dirent.h>
 #include <sys/sysmacros.h>
 #include <stdbool.h>
+#include <crypt.h>
+#include <termios.h>
 
 #ifndef MY_H_
     #define MY_H_
