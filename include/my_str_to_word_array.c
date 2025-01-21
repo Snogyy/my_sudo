@@ -5,9 +5,7 @@
 ** Split a string into word
 */
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include "my.h"
 
 int count_spaces(char const *str, int k)
 {
@@ -54,7 +52,7 @@ int count_word(char const *str, int count)
     return count + 1;
 }
 
-static char *my_str_to_word_array2(char const *str, char **tab, int count)
+static char *my_str_to_word_array_bis(char const *str, char **tab, int count)
 {
     int i = 0;
     int b = 0;
@@ -84,7 +82,7 @@ char **my_str_to_word_array(char const *str)
     tab = malloc(sizeof(char *) * (count + 1));
     if (tab == NULL)
         return tab;
-    my_str_to_word_array2(str, tab, count);
+    my_str_to_word_array_bis(str, tab, count);
     tab[count] = NULL;
     return tab;
 }
