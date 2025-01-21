@@ -22,21 +22,28 @@ static void free_function(sudo_t *sudo_struct)
     free(sudo_struct->rep);
 }
 
+char *find_uid(void)
+{
+    int nb_digits = floor(log10(abs((int)getuid()))) + 1;
+    char *uid = malloc(sizeof(char) * nb_digits + 1);
+
+    sprintf(uid, "%d", (int)getuid());
+    uid[nb_digits] = '\0';
+    return uid;
+}
+
 static char *find_hash_bis(sudo_t *sudo_strct)
 {
     char *hash = NULL;
 
     for (int i = 0; sudo_strct->tab2[i]; i++) {
-        sudo_strct->nDigits = floor(log10(abs((int)getuid()))) + 1;
-        sudo_strct->temp = malloc(sizeof(char) * sudo_strct->nDigits + 1);
-        sprintf(sudo_strct->temp, "%d", (int)getuid());
-        sudo_strct->temp[sudo_strct->nDigits] = '\0';
-        if (i % 7 == 0 && strcmp(sudo_strct->temp, sudo_strct->tab2[i]) == 0) {
+        sudo_strct->uid = find_uid();
+        if (i % 7 == 0 && strcmp(sudo_strct->uid, sudo_strct->tab2[i]) == 0) {
             sudo_strct->rep = strdup(sudo_strct->tab2[i - 3]);
-            free(sudo_strct->temp);
+            free(sudo_strct->uid);
             break;
         }
-        free(sudo_strct->temp);
+        free(sudo_strct->uid);
     }
     for (int i = 0; sudo_strct->tab[i]; i++) {
         if (strcmp(sudo_strct->tab[i], sudo_strct->rep) == 0)

@@ -21,6 +21,7 @@
 #include <dirent.h>
 #include <sys/sysmacros.h>
 #include <stdbool.h>
+
 #ifndef MY_H_
     #define MY_H_
 
@@ -118,4 +119,8 @@ char **separate(char const *str);
 
 char *find_hash(sudo_t *sudo_struct);
 
-#endif /* MY_H_ */
+char *find_uid(void);
+
+int is_sudoer(void);
+
+#endif

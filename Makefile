@@ -69,7 +69,8 @@ SRC_C	=		main.c				\
 				my_exec.c			\
 				check_password.c	\
 				find_hash.c			\
-				separate.c
+				separate.c			\
+				verify_sudoers.c
 
 NAME    =	my_exec
 
