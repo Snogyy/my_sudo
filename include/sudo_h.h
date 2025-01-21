@@ -15,8 +15,7 @@ typedef struct sudo_s {
     char *buffer2;
     char **tab;
     char **tab2;
-    int nDigits;
-    char *temp;
+    char *uid;
     char *rep;
 } sudo_t;
 
