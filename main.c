@@ -19,10 +19,9 @@ int main(int argc, char **argv)
         write(1, " is not in the sudoers file.\n", 29);
         return 84;
     }
-    if (check_password(find_hash(&sudo_struct)) == 1) {
-        printf("Access granted\n");
+    if (check_password(find_hash(&sudo_struct)) == 1)
         my_exec(argv[1], argv[2]);
-    } else {
+    else {
         printf("Acess denied\n");
         return 84;
     }
