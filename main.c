@@ -10,12 +10,14 @@
 int main(int argc, char **argv)
 {
     sudo_t sudo_struct;
-    char *user = getenv("USER");
 
-    if (argc < 3)
+    if (argc < 2)
+        return 84;
+    sudo_struct.user = getenv("USER");
+    if (!sudo_struct.user)
         return 84;
     if (is_sudoer() == 0) {
-        write(1, user, strlen(user));
+        write(1, sudo_struct.user, strlen(sudo_struct.user));
         write(1, " is not in the sudoers file.\n", 29);
         return 84;
     }
