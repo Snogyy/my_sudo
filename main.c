@@ -19,7 +19,7 @@ static void flag(char **argv, sudo_t *sudo_struct)
     sudo_struct->atempt = 0;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **env)
 {
     sudo_t sudo_struct;
     char *hash;
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     if (!hash)
         return 84;
     if (check_password(&sudo_struct, hash) == 1)
-        my_exec(&sudo_struct, argv);
+        my_exec(&sudo_struct, argv, env);
     else
         return 84;
 }

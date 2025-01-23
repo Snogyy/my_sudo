@@ -26,7 +26,7 @@
 #ifndef MY_H_
     #define MY_H_
 
-void my_exec(sudo_t *sudo_struct, char **argv);
+void my_exec(sudo_t *sudo_struct, char **argv, char **env);
 int check_password(sudo_t *sudo_struct, char *password_hash);
 char *find_hash(sudo_t *sudo_struct);
 int is_sudoer(void);
