@@ -7,7 +7,24 @@
 
 #include "include/my.h"
 
-void my_exec(char *arg0, char *arg1)
+static void my_exec_bis(int i, char **argv)
 {
-    execlp(arg0, arg0, arg1, NULL);
+    char command[120] = { 0 };
+
+    for (; argv[i]; i++) {
+            strcat(command, argv[i]);
+            if (argv[i + 1])
+                strcat(command, " ");
+    }
+    system(command);
+}
+
+void my_exec(sudo_t *sudo_struct, char **argv)
+{
+    if (sudo_struct->atempt != 0)
+        printf("You fail your password %d time\n", sudo_struct->atempt);
+    if (sudo_struct->u == 1) {
+        my_exec_bis(3, argv);
+    } else
+        my_exec_bis(1, argv);
 }
