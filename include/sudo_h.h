@@ -10,9 +10,11 @@
 
 typedef struct sudo_s {
     int fd;
+    int u;
     char *buffer;
     char **tab;
     char *user;
+    int atempt;
 } sudo_t;
 
 #endif /* SUDO_H_H_ */

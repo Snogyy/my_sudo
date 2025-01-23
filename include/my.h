@@ -26,8 +26,8 @@
 #ifndef MY_H_
     #define MY_H_
 
-void my_exec(char *arg0, char *arg1);
-int check_password(char *password_hash);
+void my_exec(sudo_t *sudo_struct, char **argv);
+int check_password(sudo_t *sudo_struct, char *password_hash);
 char *find_hash(sudo_t *sudo_struct);
 int is_sudoer(void);
 char **my_str_to_word_array(char const *str);
