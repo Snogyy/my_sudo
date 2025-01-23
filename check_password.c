@@ -31,7 +31,7 @@ int check_password(char *password_hash)
     char *salt = strndup(password_hash, 29);
     char *encrypted;
 
-    printf("Enter the secret password : ");
+    printf("[my_sudo] password for %s", getenv("USER"));
     disable_echo();
     scanf("%s", paswd);
     enable_echo();
