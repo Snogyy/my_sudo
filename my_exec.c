@@ -7,24 +7,17 @@
 
 #include "include/my.h"
 
-static void my_exec_bis(int i, char **argv)
+static void my_exec_bis(int i, char **argv, char **env)
 {
-    char command[120] = { 0 };
-
-    for (; argv[i]; i++) {
-            strcat(command, argv[i]);
-            if (argv[i + 1])
-                strcat(command, " ");
-    }
-    system(command);
+    execvpe(argv[i], &argv[i], env);
 }
 
-void my_exec(sudo_t *sudo_struct, char **argv)
+void my_exec(sudo_t *sudo_struct, char **argv, char **env)
 {
     if (sudo_struct->atempt != 0)
         printf("You fail your password %d time\n", sudo_struct->atempt);
     if (sudo_struct->u == 1) {
-        my_exec_bis(3, argv);
+        my_exec_bis(3, argv, env);
     } else
-        my_exec_bis(1, argv);
+        my_exec_bis(1, argv, env);
 }

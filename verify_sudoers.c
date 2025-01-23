@@ -24,6 +24,9 @@ void find_auth(char **auth_groups, char **auth_users)
     int index_user = 0;
     FILE *file = fopen("/etc/sudoers", "r");
 
+    if (!file)
+        exit(84);
+
     while (fgets(line, sizeof(line), file) != NULL) {
         if (sscanf(line, "%s %s", element, other) == 2 && strstr(other, "ALL")
         && element[0] == '%')
