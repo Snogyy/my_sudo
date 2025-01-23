@@ -9,44 +9,19 @@
 
 static void free_function(sudo_t *sudo_struct)
 {
-    free(sudo_struct->buffer2);
     free(sudo_struct->buffer);
     close(sudo_struct->fd);
-    close(sudo_struct->fd2);
     for (int i = 0; sudo_struct->tab[i]; i++)
         free(sudo_struct->tab[i]);
     free(sudo_struct->tab);
-    for (int i = 0; sudo_struct->tab2[i]; i++)
-        free(sudo_struct->tab2[i]);
-    free(sudo_struct->tab2);
-    free(sudo_struct->rep);
-}
-
-char *find_uid(void)
-{
-    int nb_digits = floor(log10(abs((int)getuid()))) + 1;
-    char *uid = malloc(sizeof(char) * nb_digits + 1);
-
-    sprintf(uid, "%d", (int)getuid());
-    uid[nb_digits] = '\0';
-    return uid;
 }
 
 static char *find_hash_bis(sudo_t *sudo_strct)
 {
     char *hash = NULL;
 
-    for (int i = 0; sudo_strct->tab2[i]; i++) {
-        sudo_strct->uid = find_uid();
-        if (i % 7 == 0 && strcmp(sudo_strct->uid, sudo_strct->tab2[i]) == 0) {
-            sudo_strct->rep = strdup(sudo_strct->tab2[i - 3]);
-            free(sudo_strct->uid);
-            break;
-        }
-        free(sudo_strct->uid);
-    }
     for (int i = 0; sudo_strct->tab[i]; i++) {
-        if (strcmp(sudo_strct->tab[i], sudo_strct->rep) == 0)
+        if (strcmp(sudo_strct->tab[i], sudo_strct->user) == 0)
             hash = strdup(sudo_strct->tab[i + 1]);
     }
     free_function(sudo_strct);
@@ -56,23 +31,16 @@ static char *find_hash_bis(sudo_t *sudo_strct)
 char *find_hash(sudo_t *sudo_struct)
 {
     struct stat sd;
-    struct stat sb;
 
     sudo_struct->fd = open(SHADOW, O_RDONLY);
-    sudo_struct->fd2 = open(PASSWD, O_RDONLY);
-    if (!sudo_struct->fd || !sudo_struct->fd2)
+    if (!sudo_struct->fd)
         return NULL;
     stat(SHADOW, &sd);
-    stat(PASSWD, &sb);
     sudo_struct->buffer = malloc(sizeof(char) * sd.st_size + 1);
-    sudo_struct->buffer2 = malloc(sizeof(char) * sb.st_size + 1);
-    if (!sudo_struct->buffer || !sudo_struct->buffer2)
+    if (!sudo_struct->buffer)
         return NULL;
     read(sudo_struct->fd, sudo_struct->buffer, sd.st_size);
-    read(sudo_struct->fd2, sudo_struct->buffer2, sb.st_size);
     sudo_struct->buffer[sd.st_size] = '\0';
-    sudo_struct->buffer2[sb.st_size] = '\0';
     sudo_struct->tab = separate(sudo_struct->buffer);
-    sudo_struct->tab2 = separate(sudo_struct->buffer2);
     return find_hash_bis(sudo_struct);
 }
