@@ -43,12 +43,13 @@ char **find_groups(char *user)
 {
     FILE *groups;
     char buffer[200];
-    char *command = malloc(sizeof(char) * (7 + strlen(user)));
+    char *command = malloc(sizeof(char) * (8 + strlen(user)));
 
     strcpy(command, "groups ");
     strcat(command, user);
     groups = popen(command, "r");
     fgets(buffer, sizeof(buffer), groups);
+    buffer[strlen(buffer) + 1] = '\0';
     return my_str_to_word_array(buffer);
 }
 
