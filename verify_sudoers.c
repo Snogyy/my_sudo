@@ -26,7 +26,6 @@ void find_auth(char **auth_groups, char **auth_users)
 
     if (!file)
         exit(84);
-
     while (fgets(line, sizeof(line), file) != NULL) {
         if (sscanf(line, "%s %s", element, other) == 2 && strstr(other, "ALL")
         && element[0] == '%')
