@@ -38,7 +38,6 @@ int main(int argc, char **argv, char **env)
     if (!hash)
         return 84;
     if (check_password(&sudo_struct, hash) == 1)
-        my_exec(&sudo_struct, argv, env);
-    else
-        return 84;
+        return (my_exec(&sudo_struct, argv, env));
+    return 0;
 }
