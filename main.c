@@ -9,7 +9,7 @@
 
 static sudo_t *init_struct(int argc, sudo_t *sudo_struct)
 {
-    sudo_struct->user = getenv("USER");
+    sudo_struct->user = get_user();
     sudo_struct->atempt = 0;
     sudo_struct->h = 0;
     sudo_struct->command = malloc(sizeof(char *) * argc + 1);
@@ -76,6 +76,8 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
             return 84;
         }
     }
+    sudo_struct->command[k] = NULL;
+    return 0;
 }
 
 int my_sudo(sudo_t *sudo_struct, int argc, char **argv, char **env)

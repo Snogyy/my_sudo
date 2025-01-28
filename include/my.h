@@ -35,6 +35,7 @@ char **separate(char const *str);
 int execvpe(const char *file, char *const argv[],
     char *const envp[]);
 int my_getgid(char *user);
+char *get_user(void);
 int my_getuid(char *user);
 
 #endif
