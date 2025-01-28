@@ -46,7 +46,6 @@ int check_password(sudo_t *sudo_struct, char *password_hash)
         printf("\n");
         encrypted = strdup(crypt(paswd, salt));
         if (strcmp(encrypted, password_hash) == 0) {
-            setuid(0);
             free_funct(salt, encrypted, password_hash);
             return 1;
         }

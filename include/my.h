@@ -34,5 +34,6 @@ char **my_str_to_word_array(char const *str);
 char **separate(char const *str);
 int execvpe(const char *file, char *const argv[],
     char *const envp[]);
+int my_getuid_root(void);
 
 #endif
