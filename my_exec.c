@@ -31,14 +31,12 @@ static int my_exec_bis(sudo_t *sudo_struct, char **argv, char **env)
         i += 1;
     } else {
         if (setuid(my_getuid("root")) == -1) {
-            printf("here\n");
             return 84;
         }
     }
     if (my_exec_tierce(sudo_struct, argv, &i) == 84) {
         return 84;
     }
-    sudo_struct->command[i + 1] = NULL;
     return (execvpe(sudo_struct->command[i], &sudo_struct->command[i], env));
 }
 
