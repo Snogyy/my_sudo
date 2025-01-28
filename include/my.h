@@ -29,7 +29,7 @@
 int my_exec(sudo_t *sudo_struct, char **argv, char **env);
 int check_password(sudo_t *sudo_struct, char *password_hash);
 char *find_hash(sudo_t *sudo_struct);
-int is_sudoer(void);
+int is_sudoer(sudo_t *sudo_struct);
 char **my_str_to_word_array(char const *str);
 char **separate(char const *str);
 int execvpe(const char *file, char *const argv[],
