@@ -17,22 +17,20 @@ int add_to_group(char **auth_groups, int index_group, char *element)
 
 void find_auth(char **auth_groups, char **auth_users)
 {
-    char line[200];
-    char element[100];
-    char other[100];
+    char l[200];
+    char e[100];
+    char o[100];
     int index_group = 0;
     int index_user = 0;
     FILE *file = fopen("/etc/sudoers", "r");
 
     if (!file)
         exit(84);
-    while (fgets(line, sizeof(line), file) != NULL) {
-        if (sscanf(line, "%s %s", element, other) == 2 && strstr(other, "ALL")
-        && element[0] == '%')
-            index_group = add_to_group(auth_groups, index_group, element);
-        if (sscanf(line, "%s %s", element, other) == 2
-        && strstr(other, "ALL") && element[0] != '%') {
-            auth_users[index_user] = strdup(element);
+    while (fgets(l, sizeof(l), file) != NULL) {
+        if (sscanf(l, "%s %s", e, o) == 2 && strstr(o, "ALL") && e[0] == '%')
+            index_group = add_to_group(auth_groups, index_group, e);
+        if (sscanf(l, "%s %s", e, o) == 2 && strstr(o, "ALL") && e[0] != '%') {
+            auth_users[index_user] = strdup(e);
             index_user++;
         }
     }
