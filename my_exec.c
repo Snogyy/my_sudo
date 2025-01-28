@@ -9,6 +9,8 @@
 
 static int my_exec_bis(int i, char **argv, char **env)
 {
+    if (setuid(my_getuid_root()) == -1)
+        printf("Error setuid\n");
     return (execvpe(argv[i], &argv[i], env));
 }
 

@@ -11,7 +11,8 @@ SRC	=		main.c				\
 			find_hash.c			\
 			verify_sudoers.c	\
 			include/my_str_to_word_array.c \
-			separate.c
+			separate.c			\
+			my_getuid_root.c
 
 NAME    =	my_sudo
 
