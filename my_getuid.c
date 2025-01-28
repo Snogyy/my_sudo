@@ -9,16 +9,14 @@
 
 int str_to_int(char *str)
 {
-    int result = str[0] - 48;
+    int res = 0;
 
-    for (int i = 1; str[i] != '\0'; i++) {
-        result *= 10;
-        result = str[i] - 48;
-    }
-    return result;
+    for (int i = 0; i < strlen(str); i++)
+        res = (res * 10) + str[i] - 48;
+    return res;
 }
 
-int my_getuid_root(void)
+int my_getuid(char *user)
 {
     char line[200];
     char **tab;
@@ -27,7 +25,8 @@ int my_getuid_root(void)
 
     while (fgets(line, sizeof(line), file) != NULL) {
         tab = separate(line);
-        if (strcmp(tab[0], "root") == 0)
+        if (strcmp(tab[0], user) == 0)
             return str_to_int(tab[2]);
     }
+    return 84;
 }

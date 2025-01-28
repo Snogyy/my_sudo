@@ -11,13 +11,12 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
 {
     if (argc < 2)
         return 84;
-    if (strcmp(argv[1], "-u") == 0) {
-        sudo_struct->user = argv[2];
-        sudo_struct->u = 1;
-    } else {
-        sudo_struct->user = getenv("USER");
-        sudo_struct->u = 0;
+    if (argc > 2 && strcmp(argv[1], "-u") == 0) {
+        if (setuid(my_getuid(argv[2]) == -1) || my_getuid(argv[2]) == 84)
+            return 84;
     }
+    sudo_struct->user = getenv("USER");
+    sudo_struct->u = 0;
     if (!sudo_struct->user)
         return 84;
     sudo_struct->atempt = 0;
@@ -40,7 +39,7 @@ int main(int argc, char **argv, char **env)
     if (!hash)
         return 84;
     if (check_password(&sudo_struct, hash) == 1)
-        return (my_exec(&sudo_struct, argv, env));
+        return (my_exec(&sudo_struct, argc, argv, env));
     else {
         printf("my_sudo: 3 incorrect password attemps\n");
         return 84;
