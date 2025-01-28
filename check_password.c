@@ -39,16 +39,18 @@ int check_password(sudo_t *sudo_struct, char *password_hash)
     char *encrypted;
 
     while (sudo_struct->atempt != 3) {
-        printf("[my_sudo] password for %s", getenv("USER"));
+        printf("[my_sudo] password for %s: ", sudo_struct->user);
         disable_echo();
         scanf("%s", paswd);
         enable_echo();
         printf("\n");
         encrypted = strdup(crypt(paswd, salt));
         if (strcmp(encrypted, password_hash) == 0) {
+            setuid(0);
             free_funct(salt, encrypted, password_hash);
             return 1;
         }
+        printf("Sorry, try again. \n");
         sudo_struct->atempt += 1;
     }
     free_funct(salt, encrypted, password_hash);

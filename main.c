@@ -29,7 +29,7 @@ int main(int argc, char **argv, char **env)
     flag(argv, &sudo_struct);
     if (!sudo_struct.user)
         return 84;
-    if (is_sudoer() == 0) {
+    if (is_sudoer(&sudo_struct) == 0) {
         write(1, sudo_struct.user, strlen(sudo_struct.user));
         write(1, " is not in the sudoers file.\n", 29);
         return 84;
@@ -39,5 +39,9 @@ int main(int argc, char **argv, char **env)
         return 84;
     if (check_password(&sudo_struct, hash) == 1)
         return (my_exec(&sudo_struct, argv, env));
+    else {
+        printf("my_sudo: 3 incorrect password attemps\n");
+        return 84;
+    }
     return 0;
 }

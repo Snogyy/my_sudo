@@ -62,9 +62,9 @@ int verify_group(char **groups, char *auth_group)
     return 0;
 }
 
-int is_sudoer(void)
+int is_sudoer(sudo_t *sudo_struct)
 {
-    char *user = getenv("USER");
+    char *user = sudo_struct->user;
     char **groups = find_groups(user);
     char **auth_groups = malloc(sizeof(char *) * 100);
     char **auth_users = malloc(sizeof(char *) * 100);
