@@ -7,6 +7,20 @@
 
 #include "include/my.h"
 
+static int my_exec_tierce(sudo_t *sudo_struct, char **argv, int *i)
+{
+    if (sudo_struct->g != 0) {
+        if (my_getgid(argv[sudo_struct->u + 1]) == 84 ||
+            setgid(my_getgid(argv[sudo_struct->g + 1])) == -1)
+            return 84;
+        *i += 1;
+    } else {
+        if (setgid(my_getgid("root")) == -1)
+            return 84;
+    }
+    return 0;
+}
+
 static int my_exec_bis(sudo_t *sudo_struct, char **argv, char **env)
 {
     int i = 0;
@@ -15,11 +29,13 @@ static int my_exec_bis(sudo_t *sudo_struct, char **argv, char **env)
         if (my_getuid(argv[sudo_struct->u + 1]) == 84 ||
             setuid(my_getuid(argv[sudo_struct->u + 1])) == -1)
             return 84;
-        i = 1;
+        i += 1;
     } else {
-        if (setuid(my_getuid("root")) == -1 || setgid(my_getgid("root")) == -1)
+        if (setuid(my_getuid("root")) == -1)
             return 84;
     }
+    if (my_exec_tierce(sudo_struct, argv, &i) == 84)
+        return 84;
     return (execvpe(sudo_struct->command[i], &sudo_struct->command[i], env));
 }
 

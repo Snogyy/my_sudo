@@ -105,6 +105,8 @@ int main(int argc, char **argv, char **env)
     if (flag(argc, argv, &sudo_struct)) {
         return 84;
     }
+    if (sudo_struct.h != 0)
+        return 0;
     if (is_sudoer(&sudo_struct) == 0) {
         write(1, sudo_struct.user, strlen(sudo_struct.user));
         write(1, " is not in the sudoers file.\n", 29);
