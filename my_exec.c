@@ -38,6 +38,7 @@ static int my_exec_bis(sudo_t *sudo_struct, char **argv, char **env)
     if (my_exec_tierce(sudo_struct, argv, &i) == 84) {
         return 84;
     }
+    sudo_struct->command[i + 1] = NULL;
     return (execvpe(sudo_struct->command[i], &sudo_struct->command[i], env));
 }
 

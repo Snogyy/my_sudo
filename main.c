@@ -76,7 +76,6 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
             return 84;
         }
     }
-    sudo_struct->command[k] = NULL;
     return 0;
 }
 
