@@ -12,7 +12,7 @@ SRC	=		main.c				\
 			verify_sudoers.c	\
 			include/my_str_to_word_array.c \
 			separate.c			\
-			my_getuid_root.c
+			my_getuid.c
 
 NAME    =	my_sudo
 
