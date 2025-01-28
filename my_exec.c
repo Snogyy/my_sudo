@@ -7,21 +7,20 @@
 
 #include "include/my.h"
 
-static int my_exec_bis(int argc, char **argv, char **env)
+static int my_exec_bis(sudo_t *sudo_struct, char **argv, char **env)
 {
-    int i;
+    int i = 0;
 
-    if (argc > 2 && strcmp(argv[1], "-u") == 0) {
-        i = 3;
-        if (my_getuid(argv[2]) == 84 || setuid(my_getuid(argv[2])) == -1)
+    if (sudo_struct->u != 0) {
+        if (my_getuid(argv[sudo_struct->u + 1]) == 84 ||
+            setuid(my_getuid(argv[sudo_struct->u + 1])) == -1)
             return 84;
-    } else {
         i = 1;
-        if (setuid(my_getuid("root") == -1))
+    } else {
+        if (setuid(my_getuid("root")) == -1 || setgid(my_getgid("root")) == -1)
             return 84;
     }
-    printf("%d\n", execvpe(argv[i], &argv[i], env));
-    return (execvpe(argv[i], &argv[i], env));
+    return (execvpe(sudo_struct->command[i], &sudo_struct->command[i], env));
 }
 
 int my_exec(sudo_t *sudo_struct, int argc, char **argv, char **env)
@@ -30,7 +29,8 @@ int my_exec(sudo_t *sudo_struct, int argc, char **argv, char **env)
 
     if (sudo_struct->atempt != 0)
         printf("You fail your password %d time\n", sudo_struct->atempt);
-    rep = my_exec_bis(argc, argv, env);
+    rep = my_exec_bis(sudo_struct, argv, env);
+    free(sudo_struct->command);
     if (rep == -1)
         return 84;
     return rep;
