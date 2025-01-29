@@ -78,11 +78,20 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
     return 0;
 }
 
+
+static void free_struct(sudo_t *sudo_struct)
+{
+    for (int i = 0; sudo_struct->command[i]; i++)
+        free(sudo_struct->command[i]);
+    free(sudo_struct->command);
+    free(sudo_struct->user);
+}
+
 int false_sudoer(sudo_t *sudo_struct)
 {
     write(1, sudo_struct->user, strlen(sudo_struct->user));
     write(1, " is not in the sudoers file.\n", 29);
-    free(sudo_struct->command);
+    free_struct(sudo_struct);
     return 84;
 }
 
@@ -92,7 +101,7 @@ int my_sudo(sudo_t *sudo_struct, int argc, char **argv, char **env)
 
     hash = find_hash(sudo_struct);
     if (!hash) {
-        free(sudo_struct->command);
+        free_struct(sudo_struct);
         return 84;
     }
     if (check_password(sudo_struct, hash) == 1) {
@@ -100,11 +109,11 @@ int my_sudo(sudo_t *sudo_struct, int argc, char **argv, char **env)
             return false_sudoer(sudo_struct);
         return (my_exec(sudo_struct, argc, argv, env));
     } else {
-        printf("my_sudo: 3 incorrect password attemps\n");
-        free(sudo_struct->command);
+        printf("my_sudo: 3 incorrect password attempts\n");
+        free_struct(sudo_struct);
         return 84;
     }
-    free(sudo_struct->command);
+    free_struct(sudo_struct);
     if (sudo_struct->E == 0)
         clearenv();
     return 0;
