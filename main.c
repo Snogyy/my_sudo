@@ -9,7 +9,7 @@
 
 static sudo_t *init_struct(int argc, sudo_t *sudo_struct)
 {
-    sudo_struct->user = get_user();
+    sudo_struct->user = get_user((int)getuid());
     sudo_struct->atempt = 0;
     sudo_struct->h = 0;
     sudo_struct->command = malloc(sizeof(char *) * argc + 1);
