@@ -72,7 +72,6 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
             k++;
         }
         if (b == 84) {
-            free(sudo_struct->command);
             return 84;
         }
     }
@@ -104,6 +103,7 @@ int main(int argc, char **argv, char **env)
     sudo_t sudo_struct = { 0 };
 
     if (flag(argc, argv, &sudo_struct)) {
+        free(sudo_struct.command);
         return 84;
     }
     if (sudo_struct.h != 0)
