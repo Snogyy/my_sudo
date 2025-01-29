@@ -105,6 +105,8 @@ int my_sudo(sudo_t *sudo_struct, int argc, char **argv, char **env)
         return 84;
     }
     free(sudo_struct->command);
+    if (sudo_struct->E == 0)
+        clearenv();
     return 0;
 }
 
@@ -113,7 +115,7 @@ int main(int argc, char **argv, char **env)
     sudo_t sudo_struct = { 0 };
 
     if (flag(argc, argv, &sudo_struct)) {
-        free(sudo_struct.command);
+        free_struct(&sudo_struct);
         return 84;
     }
     if (sudo_struct.h != 0)
