@@ -7,7 +7,7 @@
 
 #include "include/my.h"
 
-char *get_user(void)
+char *get_user(int uid)
 {
     FILE *fd;
     char buff[512];
@@ -18,7 +18,7 @@ char *get_user(void)
     fd = fopen("/etc/passwd", "r");
     while (fgets(buff, sizeof(buff), fd)) {
         sscanf(buff, "%31[^:]:%31[^:]:%d:", asker_name, pass, &asker_uid);
-        if (asker_uid == getuid())
+        if (asker_uid == uid)
             break;
     }
     fclose(fd);

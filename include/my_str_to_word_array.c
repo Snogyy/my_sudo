@@ -10,8 +10,9 @@
 int count_spaces(char const *str, int k)
 {
     for (; str[k] != '\0' && !(((str[k] >= '0') && (str[k] <= '9')) ||
-    ((str[k] >= 'a') && (str[k] <= 'z')) ||
-    ((str[k] >= 'A') && (str[k] <= 'Z')) || str[k] == '.'); k++);
+    ((str[k] >= 'a') && (str[k] <= 'z'))
+    || ((str[k] >= 'A') && (str[k] <= 'Z')) || str[k] == '.'
+    || str[k] == '_'); k++);
     return k;
 }
 
@@ -19,7 +20,8 @@ int count_char(char const *str, int *i, int k)
 {
     for (*i = 0; (((str[k] >= '0') && (str[k] <= '9')) ||
     ((str[k] >= 'a') && (str[k] <= 'z')) ||
-    ((str[k] >= 'A') && (str[k] <= 'Z')) || str[k] == '.'); *i += 1) {
+    ((str[k] >= 'A') && (str[k] <= 'Z')) || str[k] == '.'
+    || str[k] == '_'); *i += 1) {
         k++;
     }
     return k;
@@ -29,7 +31,7 @@ int function_bizzare(char const *str, int *k, int count)
 {
     if ((str[*k] < '0' || str[*k] > '9') &&
     (str[*k] < 'A' || str[*k] > 'Z') &&
-    (str[*k] < 'a' || str[*k] > 'z') && str[*k] != '.') {
+    (str[*k] < 'a' || str[*k] > 'z') && str[*k] != '.' && str[*k] != '_') {
         for (; str[*k] != '\0' && !(((str[*k] >= '0') && (str[*k] <= '9')) ||
         ((str[*k] >= 'a') && (str[*k] <= 'z')) ||
         ((str[*k] >= 'A') && (str[*k] <= 'Z'))); *k = *k + 1);
@@ -45,7 +47,8 @@ int count_word(char const *str, int count)
 
     for (; str[k] != '\0' && !(((str[k] >= '0') && (str[k] <= '9')) ||
         ((str[k] >= 'a') && (str[k] <= 'z')) ||
-        ((str[k] >= 'A') && (str[k] <= 'Z')) || str[k] == '.'); k++);
+        ((str[k] >= 'A') && (str[k] <= 'Z')) || str[k] == '.'
+        || str[k] == '_'); k++);
     for (; str[k]; k++) {
         count = function_bizzare(str, &k, count);
     }

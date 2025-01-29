@@ -36,16 +36,14 @@ static int fill_auth_user(char **auth_users, char *line, int index_user)
     char o[100];
     struct passwd *pwd;
     int uid;
-    char *user;
 
-    if (sscanf(line, "%s %s", e, o) == 2 && strstr(o, "ALL") && e[0] != '%') {
+    if (sscanf(line, "%s %s", e, o) == 2 && strstr(o, "ALL") && e[0] != '%'
+    && e[0] != '#') {
         auth_users[index_user] = strdup(e);
         index_user++;
     }
     if (sscanf(line, "#%d %s", &uid, o) == 2 && strstr(o, "ALL")) {
-        pwd = getpwuid(uid);
-        user = pwd->pw_name;
-        auth_users[index_user] = strdup(user);
+        auth_users[index_user] = get_user(uid);
         index_user++;
     }
     return index_user;
