@@ -22,6 +22,8 @@
 #include <stdbool.h>
 #include <crypt.h>
 #include <termios.h>
+#include <pwd.h>
+#include <grp.h>
 
 #ifndef MY_H_
     #define MY_H_
