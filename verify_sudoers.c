@@ -7,19 +7,53 @@
 
 #include "include/my.h"
 
-int add_to_group(char **auth_groups, int index_group, char *element)
+static int fill_auth_group(char **auth_groups, char *line, int index_group)
 {
-    auth_groups[index_group] = strdup(element);
-    memmove(&auth_groups[index_group][0], &auth_groups[index_group][1],
-    strlen(auth_groups[index_group]));
-    return index_group + 1;
+    char e[100];
+    char o[100];
+    struct group *grp;
+    int gid;
+    char *group;
+
+    if (sscanf(line, "%s %s", e, o) == 2 && strstr(o, "ALL") && e[0] == '%') {
+        auth_groups[index_group] = strdup(e);
+        memmove(&auth_groups[index_group][0], &auth_groups[index_group][1],
+        strlen(auth_groups[index_group]));
+        index_group++;
+    }
+    if (sscanf(line, "%%#%d %s", &gid, o) == 2 && strstr(o, "ALL")) {
+        grp = getgrgid(gid);
+        group = grp->gr_name;
+        auth_groups[index_group] = strdup(group);
+        index_group++;
+    }
+    return index_group;
+}
+
+static int fill_auth_user(char **auth_users, char *line, int index_user)
+{
+    char e[100];
+    char o[100];
+    struct passwd *pwd;
+    int uid;
+    char *user;
+
+    if (sscanf(line, "%s %s", e, o) == 2 && strstr(o, "ALL") && e[0] != '%') {
+        auth_users[index_user] = strdup(e);
+        index_user++;
+    }
+    if (sscanf(line, "#%d %s", &uid, o) == 2 && strstr(o, "ALL")) {
+        pwd = getpwuid(uid);
+        user = pwd->pw_name;
+        auth_users[index_user] = strdup(user);
+        index_user++;
+    }
+    return index_user;
 }
 
 void find_auth(char **auth_groups, char **auth_users)
 {
     char l[200];
-    char e[100];
-    char o[100];
     int index_group = 0;
     int index_user = 0;
     FILE *file = fopen("/etc/sudoers", "r");
@@ -27,12 +61,8 @@ void find_auth(char **auth_groups, char **auth_users)
     if (!file)
         exit(84);
     while (fgets(l, sizeof(l), file) != NULL) {
-        if (sscanf(l, "%s %s", e, o) == 2 && strstr(o, "ALL") && e[0] == '%')
-            index_group = add_to_group(auth_groups, index_group, e);
-        if (sscanf(l, "%s %s", e, o) == 2 && strstr(o, "ALL") && e[0] != '%') {
-            auth_users[index_user] = strdup(e);
-            index_user++;
-        }
+        index_group = fill_auth_group(auth_groups, l, index_group);
+        index_user = fill_auth_user(auth_users, l, index_user);
     }
     fclose(file);
     auth_groups[index_group] = NULL;
