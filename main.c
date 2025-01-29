@@ -88,6 +88,8 @@ int my_sudo(sudo_t *sudo_struct, int argc, char **argv, char **env)
         return 84;
     }
     if (check_password(sudo_struct, hash) == 1) {
+        if (is_sudoer(sudo_struct) == 0)
+            return false_sudoer(sudo_struct);
         return (my_exec(sudo_struct, argc, argv, env));
     } else {
         printf("my_sudo: 3 incorrect password attemps\n");
@@ -110,11 +112,5 @@ int main(int argc, char **argv, char **env)
     }
     if (sudo_struct.h != 0)
         return 0;
-    if (is_sudoer(&sudo_struct) == 0) {
-        write(1, sudo_struct.user, strlen(sudo_struct.user));
-        write(1, " is not in the sudoers file.\n", 29);
-        free_struct(&sudo_struct);
-        return 84;
-    }
     return my_sudo(&sudo_struct, argc, argv, env);
 }
