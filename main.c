@@ -78,31 +78,23 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
     return 0;
 }
 
-static void free_struct(sudo_t *sudo_struct)
-{
-    for (int i = 0; sudo_struct->command[i]; i++)
-        free(sudo_struct->command[i]);
-    free(sudo_struct->command);
-    free(sudo_struct->user);
-}
-
 int my_sudo(sudo_t *sudo_struct, int argc, char **argv, char **env)
 {
     char *hash = NULL;
 
     hash = find_hash(sudo_struct);
     if (!hash) {
-        free_struct(sudo_struct);
+        free(sudo_struct->command);
         return 84;
     }
     if (check_password(sudo_struct, hash) == 1) {
         return (my_exec(sudo_struct, argc, argv, env));
     } else {
         printf("my_sudo: 3 incorrect password attemps\n");
-        free_struct(sudo_struct);
+        free(sudo_struct->command);
         return 84;
     }
-    free_struct(sudo_struct);
+    free(sudo_struct->command);
     if (sudo_struct->E == 0)
         clearenv();
     return 0;
