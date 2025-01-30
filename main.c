@@ -87,11 +87,6 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
     int b = 0;
     int k = 0;
 
-    if (argc < 2) {
-        printf("usage: ./my_sudo -h\nusage: ./my_sudo"
-        "[-ugEs] [command [args ...]]\n");
-        return 84;
-    }
     sudo_struct = init_struct(argc, sudo_struct);
     if (!sudo_struct)
         return 84;
@@ -159,6 +154,11 @@ int main(int argc, char **argv, char **env)
 {
     sudo_t sudo_struct = { 0 };
 
+    if (argc < 2) {
+        printf("usage: ./my_sudo -h\nusage: ./my_sudo"
+        "[-ugEs] [command [args ...]]\n");
+        return 84;
+    }
     if (flag(argc, argv, &sudo_struct) == 84)
         return 84;
     if (sudo_struct.h != 0)
