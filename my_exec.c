@@ -10,7 +10,7 @@
 static int my_exec_tierce(sudo_t *sudo_struct, char **argv, int *i)
 {
     if (sudo_struct->g != 0) {
-        if (my_getgid(argv[sudo_struct->u + 1]) == 84 ||
+        if (my_getgid(argv[sudo_struct->g + 1]) == 84 ||
             setgid(my_getgid(argv[sudo_struct->g + 1])) == -1)
             return 84;
     } else {
@@ -32,10 +32,8 @@ static int my_exec_bis(sudo_t *sudo_struct, char **argv, char **env)
             return 84;
         }
     }
-    if (my_exec_tierce(sudo_struct, argv, &i) == 84) {
+    if (my_exec_tierce(sudo_struct, argv, &i) == 84)
         return 84;
-    }
-    sudo_struct->command[i + 1] = NULL;
     return (execvpe(sudo_struct->command[i], &sudo_struct->command[i], env));
 }
 
