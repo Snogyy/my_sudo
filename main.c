@@ -12,7 +12,7 @@ static sudo_t *init_struct(int argc, sudo_t *sudo_struct)
     sudo_struct->user = get_user((int)getuid());
     sudo_struct->atempt = 0;
     sudo_struct->h = 0;
-    sudo_struct->command = malloc(sizeof(char *) * argc + 1);
+    sudo_struct->command = malloc(sizeof(char *) * (argc + 1));
     if (!sudo_struct->command)
         return NULL;
     sudo_struct->u = 0;
@@ -85,8 +85,11 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
     int b = 0;
     int k = 0;
 
-    if (argc < 2)
+    if (argc < 2) {
+        printf("usage: ./my_sudo -h\nusage: ./my_sudo"
+        "[-ugEs] [command [args ...]]\n");
         return 84;
+    }
     sudo_struct = init_struct(argc, sudo_struct);
     if (!sudo_struct)
         return 84;
