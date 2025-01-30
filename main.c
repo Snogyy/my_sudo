@@ -15,6 +15,8 @@ static sudo_t *init_struct(int argc, sudo_t *sudo_struct)
     sudo_struct->command = malloc(sizeof(char *) * (argc + 1));
     if (!sudo_struct->command)
         return NULL;
+    for (int i = 0; i <= argc; i++)
+        sudo_struct->command[i] = NULL;
     sudo_struct->u = 0;
     sudo_struct->g = 0;
     sudo_struct->E = 0;
@@ -94,25 +96,31 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
     if (!sudo_struct)
         return 84;
     for (int i = 1; argv[i] != NULL; i++) {
-        if (argv[i][0] == '-')
+        if (argv[i][0] == '-') {
             b = check_flag(i, argv, &sudo_struct);
-        else {
+            i += 1;
+        } else {
             sudo_struct->command[k] = strdup(argv[i]);
             k++;
         }
-        if (b == 84) {
+        if (b == 84)
             return 84;
-        }
     }
     return 0;
 }
 
 static void free_struct(sudo_t *sudo_struct)
 {
-    for (int i = 0; sudo_struct->command[i]; i++)
-        free(sudo_struct->command[i]);
-    free(sudo_struct->command);
-    free(sudo_struct->user);
+    for (int i = 0; sudo_struct->command[i] != NULL; i++) {
+            free(sudo_struct->command[i]);
+            sudo_struct->command[i] = NULL;
+    }
+    if (sudo_struct->command)
+        free(sudo_struct->command);
+    if (sudo_struct->user)
+        free(sudo_struct->user);
+    sudo_struct->user = NULL;
+    sudo_struct->command = NULL;
 }
 
 int false_sudoer(sudo_t *sudo_struct)

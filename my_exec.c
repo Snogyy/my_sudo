@@ -13,7 +13,6 @@ static int my_exec_tierce(sudo_t *sudo_struct, char **argv, int *i)
         if (my_getgid(argv[sudo_struct->u + 1]) == 84 ||
             setgid(my_getgid(argv[sudo_struct->g + 1])) == -1)
             return 84;
-        *i += 1;
     } else {
         setgid(my_getgid("root"));
     }
@@ -28,7 +27,6 @@ static int my_exec_bis(sudo_t *sudo_struct, char **argv, char **env)
         if (my_getuid(argv[sudo_struct->u + 1]) == 84 ||
             setuid(my_getuid(argv[sudo_struct->u + 1])) == -1)
             return 84;
-        i += 1;
     } else {
         if (setuid(my_getuid("root")) == -1) {
             return 84;
@@ -48,7 +46,6 @@ int my_exec(sudo_t *sudo_struct, int argc, char **argv, char **env)
     if (sudo_struct->atempt != 0)
         printf("You fail your password %d time\n", sudo_struct->atempt);
     rep = my_exec_bis(sudo_struct, argv, env);
-    free(sudo_struct->command);
     if (rep == -1)
         return 84;
     return rep;
