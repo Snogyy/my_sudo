@@ -10,9 +10,7 @@
 static int my_exec_tierce(sudo_t *sudo_struct, char **argv, int *i)
 {
     if (sudo_struct->g != 0) {
-        if (my_getgid(argv[sudo_struct->g + 1]) == 84 ||
-            setgid(my_getgid(argv[sudo_struct->g + 1])) == -1)
-            return 84;
+        setgid(my_getgid(argv[sudo_struct->g + 1]));
     } else {
         setgid(my_getgid("root"));
     }
