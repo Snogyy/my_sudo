@@ -22,6 +22,22 @@ static sudo_t *init_struct(int argc, sudo_t *sudo_struct)
     return sudo_struct;
 }
 
+void check_user(char *user)
+{
+    if (setuid(my_getuid(user)) == -1) {
+        printf("my_sudo: uknown user %s\n", user);
+        exit(84);
+    }
+}
+
+void check_group(char *group)
+{
+    if (setgid(my_getgid(group)) == -1) {
+        printf("my_sudo: uknown group %s\n", group);
+        exit(84);
+    }
+}
+
 static sudo_t **set_flag(int i, char **argv, sudo_t **sudo_struct)
 {
     if (strcmp(argv[i], "-h") == 0) {
@@ -29,10 +45,14 @@ static sudo_t **set_flag(int i, char **argv, sudo_t **sudo_struct)
         "[-ugEs] [command [args ...]]\n");
         (*sudo_struct)->h = i;
     }
-    if (strcmp(argv[i], "-u") == 0)
+    if (strcmp(argv[i], "-u") == 0) {
         (*sudo_struct)->u = i;
-    if (strcmp(argv[i], "-g") == 0)
+        check_user(argv[i + 1]);
+    }
+    if (strcmp(argv[i], "-g") == 0) {
         (*sudo_struct)->g = i;
+        check_group(argv[i + 1]);
+    }
     if (strcmp(argv[i], "-E") == 0)
         (*sudo_struct)->E = i;
     if (strcmp(argv[i], "-s") == 0)
@@ -77,7 +97,6 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
     }
     return 0;
 }
-
 
 static void free_struct(sudo_t *sudo_struct)
 {
