@@ -22,6 +22,24 @@ static sudo_t *init_struct(int argc, sudo_t *sudo_struct)
     return sudo_struct;
 }
 
+int check_user(char *user)
+{
+    if (my_getuid(user) == 84) {
+        printf("my_sudo: uknown user %s\n", user);
+        return 84;
+    }
+    return 0;
+}
+
+int check_group(char *group)
+{
+    if (my_getgid(group) == 84) {
+        printf("my_sudo: uknown group %s\n", group);
+        return 84;
+    }
+    return 0;
+}
+
 static sudo_t **set_flag(int i, char **argv, sudo_t **sudo_struct)
 {
     if (strcmp(argv[i], "-h") == 0) {
@@ -29,10 +47,16 @@ static sudo_t **set_flag(int i, char **argv, sudo_t **sudo_struct)
         "[-ugEs] [command [args ...]]\n");
         (*sudo_struct)->h = i;
     }
-    if (strcmp(argv[i], "-u") == 0)
+    if (strcmp(argv[i], "-u") == 0) {
         (*sudo_struct)->u = i;
-    if (strcmp(argv[i], "-g") == 0)
+        if (check_user(argv[i + 1]) == 84 || argv[i + 1] == NULL)
+            return NULL;
+    }
+    if (strcmp(argv[i], "-g") == 0) {
         (*sudo_struct)->g = i;
+        if (check_group(argv[i + 1]) == 84)
+            return NULL;
+    }
     if (strcmp(argv[i], "-E") == 0)
         (*sudo_struct)->E = i;
     if (strcmp(argv[i], "-s") == 0)
@@ -50,6 +74,8 @@ static int check_flag(int i, char **argv, sudo_t **sudo_struct)
             b = 0;
             sudo_struct = set_flag(i, argv, sudo_struct);
         }
+        if (!sudo_struct)
+            return 84;
     }
     return b;
 }
@@ -77,7 +103,6 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
     }
     return 0;
 }
-
 
 static void free_struct(sudo_t *sudo_struct)
 {
@@ -123,10 +148,8 @@ int main(int argc, char **argv, char **env)
 {
     sudo_t sudo_struct = { 0 };
 
-    if (flag(argc, argv, &sudo_struct)) {
-        free_struct(&sudo_struct);
+    if (flag(argc, argv, &sudo_struct) == 84)
         return 84;
-    }
     if (sudo_struct.h != 0)
         return 0;
     return my_sudo(&sudo_struct, argc, argv, env);
