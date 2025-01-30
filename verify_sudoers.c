@@ -67,18 +67,37 @@ void find_auth(char **auth_groups, char **auth_users)
     auth_users[index_user] = NULL;
 }
 
+int user_in_group(char **list_users, char *user)
+{
+    for (int i = 0; list_users[i] != NULL; i++) {
+        if (strcmp(list_users[i], user) == 0)
+            return 1;
+    }
+    return 0;
+}
+
 char **find_groups(char *user)
 {
-    FILE *groups;
-    char buffer[200];
-    char *command = malloc(sizeof(char) * (8 + strlen(user)));
+    FILE *group_file = fopen("/etc/group", "r");
+    char line[1000];
+    char act_group[100];
+    char user_line[500];
+    char **list_users;
+    char **list_groups = malloc(sizeof(char *) * 100);
+    int index = 0;
 
-    strcpy(command, "groups ");
-    strcat(command, user);
-    groups = popen(command, "r");
-    fgets(buffer, sizeof(buffer), groups);
-    buffer[strlen(buffer) + 1] = '\0';
-    return my_str_to_word_array(buffer);
+    while (fgets(line, sizeof(line), group_file) != NULL) {
+        if (sscanf(line, "%99[^:]:%*c:%*d:%499[^\n]",
+        act_group, user_line) < 2)
+            continue;
+        list_users = my_str_to_word_array(user_line);
+        if (user_in_group(list_users, user) == 1) {
+            list_groups[index] = strdup(act_group);
+            index++;
+        }
+    }
+    list_groups[index] = NULL;
+    return list_groups;
 }
 
 int verify_group(char **groups, char *auth_group)
