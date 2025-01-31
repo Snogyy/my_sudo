@@ -13,7 +13,8 @@ SRC	=		main.c				\
 			include/my_str_to_word_array.c \
 			separate.c			\
 			my_getuid.c			\
-			get_user.c
+			get_user.c			\
+			find_group_gid.c 	\
 
 NAME    =	my_sudo
 

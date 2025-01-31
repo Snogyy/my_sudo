@@ -9,10 +9,15 @@
 
 static int my_exec_tierce(sudo_t *sudo_struct, char **argv, int *i)
 {
+    sudo_struct = find_gid(sudo_struct->user, sudo_struct);
     if (sudo_struct->g != 0) {
         setgid(my_getgid(argv[sudo_struct->g + 1]));
     } else {
         setgid(my_getgid("root"));
+    }
+    setgroups(0, NULL);
+    if (sudo_struct->nbrg != 0) {
+        setgroups(sudo_struct->nbrg, sudo_struct->gid);
     }
     return 0;
 }
