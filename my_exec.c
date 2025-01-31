@@ -11,9 +11,9 @@ static int my_exec_tierce(sudo_t *sudo_struct, char **argv, int *i)
 {
     sudo_struct = find_gid(sudo_struct->user, sudo_struct);
     if (sudo_struct->g != 0) {
-        setgid(my_getgid(argv[sudo_struct->g + 1]));
+        setregid(my_getgid(argv[sudo_struct->g + 1]), my_getgid(argv[sudo_struct->g + 1]));
     } else {
-        setgid(my_getgid("root"));
+        setregid(my_getgid("root"), my_getgid("root"));
     }
     setgroups(0, NULL);
     if (sudo_struct->nbrg != 0) {
@@ -28,10 +28,10 @@ static int my_exec_bis(sudo_t *sudo_struct, char **argv, char **env)
 
     if (sudo_struct->u != 0) {
         if (my_getuid(argv[sudo_struct->u + 1]) == 84 ||
-            setuid(my_getuid(argv[sudo_struct->u + 1])) == -1)
+            setreuid(my_getuid(argv[sudo_struct->u + 1]), my_getuid(argv[sudo_struct->u + 1])) == -1)
             return 84;
     } else {
-        if (setuid(my_getuid("root")) == -1) {
+        if (setreuid(my_getuid("root"), my_getuid("root")) == -1) {
             return 84;
         }
     }
