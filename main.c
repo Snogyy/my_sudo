@@ -115,8 +115,11 @@ static void free_struct(sudo_t *sudo_struct)
         free(sudo_struct->command);
     if (sudo_struct->user)
         free(sudo_struct->user);
+    if (sudo_struct->gid)
+        free(sudo_struct->gid);
     sudo_struct->user = NULL;
     sudo_struct->command = NULL;
+    sudo_struct->gid = NULL;
 }
 
 int false_sudoer(sudo_t *sudo_struct)
