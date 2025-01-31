@@ -42,7 +42,7 @@ int check_group(char *group)
     return 0;
 }
 
-static sudo_t **set_flag(int i, char **argv, sudo_t **sudo_struct)
+static sudo_t **set_flag(int i, char **argv, sudo_t **sudo_struct, int argc)
 {
     if (strcmp(argv[i], "-h") == 0) {
         printf("usage: ./my_sudo -h\nusage: ./my_sudo"
@@ -51,12 +51,12 @@ static sudo_t **set_flag(int i, char **argv, sudo_t **sudo_struct)
     }
     if (strcmp(argv[i], "-u") == 0) {
         (*sudo_struct)->u = i;
-        if (check_user(argv[i + 1]) == 84 || argv[i + 1] == NULL)
+        if (check_user(argv[i + 1]) == 84 || argv[i + 1] == NULL || argc < 4)
             return NULL;
     }
     if (strcmp(argv[i], "-g") == 0) {
         (*sudo_struct)->g = i;
-        if (check_group(argv[i + 1]) == 84)
+        if (check_group(argv[i + 1]) == 84 || argv[i + 1] == NULL || argc < 4)
             return NULL;
     }
     if (strcmp(argv[i], "-E") == 0)
@@ -66,7 +66,7 @@ static sudo_t **set_flag(int i, char **argv, sudo_t **sudo_struct)
     return sudo_struct;
 }
 
-static int check_flag(int i, char **argv, sudo_t **sudo_struct)
+static int check_flag(int i, char **argv, sudo_t **sudo_struct, int argc)
 {
     char *flag = "hugEs";
     int b = 84;
@@ -74,7 +74,7 @@ static int check_flag(int i, char **argv, sudo_t **sudo_struct)
     for (int j = 0; flag[j]; j++) {
         if (argv[i][1] == flag[j]) {
             b = 0;
-            sudo_struct = set_flag(i, argv, sudo_struct);
+            sudo_struct = set_flag(i, argv, sudo_struct, argc);
         }
         if (!sudo_struct)
             return 84;
@@ -92,7 +92,7 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
         return 84;
     for (int i = 1; argv[i] != NULL; i++) {
         if (argv[i][0] == '-') {
-            b = check_flag(i, argv, &sudo_struct);
+            b = check_flag(i, argv, &sudo_struct, argc);
             i += 1;
         } else {
             sudo_struct->command[k] = strdup(argv[i]);
@@ -136,7 +136,7 @@ int my_sudo(sudo_t *sudo_struct, int argc, char **argv, char **env)
         free_struct(sudo_struct);
         return 84;
     }
-    if (check_password(sudo_struct, hash) == 1) {
+    if (getuid() == 0 || check_password(sudo_struct, hash) == 1) {
         if (is_sudoer(sudo_struct) == 0)
             return false_sudoer(sudo_struct);
         return (my_exec(sudo_struct, argc, argv, env));
