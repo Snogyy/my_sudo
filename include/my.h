@@ -40,5 +40,6 @@ char *get_user(int uid);
 int my_getuid(char *user);
 sudo_t *find_gid(char *user, sudo_t *sudo_struct);
 int user_in_group(char **list_users, char *user);
+int my_getgid_bis(char *user);
 
 #endif
