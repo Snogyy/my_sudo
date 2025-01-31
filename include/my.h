@@ -23,7 +23,6 @@
 #include <crypt.h>
 #include <termios.h>
 #include <pwd.h>
-#include <grp.h>
 
 #ifndef MY_H_
     #define MY_H_
@@ -39,5 +38,7 @@ int execvpe(const char *file, char *const argv[],
 int my_getgid(char *group);
 char *get_user(int uid);
 int my_getuid(char *user);
+sudo_t *find_gid(char *user, sudo_t *sudo_struct);
+int user_in_group(char **list_users, char *user);
 
 #endif

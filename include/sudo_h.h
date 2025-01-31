@@ -5,6 +5,7 @@
 ** sudo_h.h
 */
 
+#include <grp.h>
 #ifndef SUDO_H_H_
     #define SUDO_H_H_
 
@@ -19,6 +20,8 @@ typedef struct sudo_s {
     char **tab;
     char **command;
     char *user;
+    gid_t *gid;
+    int nbrg;
     int atempt;
 } sudo_t;
 
