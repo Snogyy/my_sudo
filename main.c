@@ -137,7 +137,7 @@ int my_sudo(sudo_t *sudo_struct, int argc, char **argv, char **env)
         return 84;
     }
     if (getuid() == 0 || check_password(sudo_struct, hash) == 1) {
-        if (is_sudoer(sudo_struct) == 0)
+        if (getuid() != 0 && is_sudoer(sudo_struct) == 0)
             return false_sudoer(sudo_struct);
         return (my_exec(sudo_struct, argc, argv, env));
     } else {
