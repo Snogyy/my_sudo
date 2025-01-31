@@ -38,7 +38,6 @@ int execvpe(const char *file, char *const argv[],
     char *const envp[]);
 int my_getgid(char *group);
 char *get_user(int uid);
-int my_getgid_bis(char *user);
 int my_getuid(char *user);
 
 #endif
