@@ -11,10 +11,8 @@ static int my_exec_tierce(sudo_t *sudo_struct, char **argv, int *i)
 {
     if (sudo_struct->g != 0) {
         setgid(my_getgid(argv[sudo_struct->g + 1]));
-        setegid(my_getgid(argv[sudo_struct->g + 1]));
     } else {
-        setgid(my_getgid_bis(sudo_struct->user));
-        setegid(my_getgid_bis(sudo_struct->user));
+        setgid(my_getgid("root"));
     }
     return 0;
 }
@@ -25,11 +23,10 @@ static int my_exec_bis(sudo_t *sudo_struct, char **argv, char **env)
 
     if (sudo_struct->u != 0) {
         if (my_getuid(argv[sudo_struct->u + 1]) == 84 ||
-            setuid(my_getuid(argv[sudo_struct->u + 1])) == -1 ||
-            seteuid(my_getuid(argv[sudo_struct->u + 1])) == -1)
+            setuid(my_getuid(argv[sudo_struct->u + 1])) == -1)
             return 84;
     } else {
-        if (setuid(my_getuid("root")) == -1 || seteuid(my_getuid("root"))) {
+        if (setuid(my_getuid("root")) == -1) {
             return 84;
         }
     }
