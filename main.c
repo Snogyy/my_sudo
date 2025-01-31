@@ -93,11 +93,12 @@ static int flag(int argc, char **argv, sudo_t *sudo_struct)
     for (int i = 1; argv[i] != NULL; i++) {
         if (argv[i][0] == '-') {
             b = check_flag(i, argv, &sudo_struct, argc);
-            i += 1;
         } else {
             sudo_struct->command[k] = strdup(argv[i]);
             k++;
         }
+        if (strcmp(argv[i], "-u") == 0 || strcmp(argv[i], "-g") == 0)
+            i++;
         if (b == 84)
             return 84;
     }
