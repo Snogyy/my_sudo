@@ -3,7 +3,7 @@
 ![Language](https://img.shields.io/badge/language-C-blue)
 
 ## 🎯 About the Project
-Welcome to **my_sudo**, a project aimed at **recreating the sudo command** in C. This implementation allows users to execute commands with elevated privileges and supports additional options.
+Welcome to **my_sudo**, a project aimed at **recreating the sudo command** in C. This implementation was developed in duo and allows users to execute commands with elevated privileges and supports additional options.
 
 ## 🚀 Features
    • Execute commands as another user (default: root).  
